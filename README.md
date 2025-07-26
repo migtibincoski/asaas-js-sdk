@@ -107,6 +107,10 @@ yarn test
 
 We welcome contributions! If you'd like to report bugs, request features or submit pull requests, feel free to open an issue or fork the repo.
 
+|          |Name      |Username  |
+|----------|----------|----------|
+|![migtibincoski's Profile Picture](https://github.com/migtibincoski.png?size=50)|Miguel Tibincoski|[migtibincoski](https://github.com/migtibincoski)
+
 ## 📄 License
 
 MIT License. See [LICENSE](./LICENSE) for more information.
