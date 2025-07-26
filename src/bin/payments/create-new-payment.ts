@@ -1,6 +1,5 @@
 import type { AsaasSdkConstructorConfig } from "../..";
 import AsaasSdkError from "../../utils/error";
-import console from "../../utils/console";
 import type {
   CreateNewPaymentBody,
   CreateNewPaymentResponse200,
@@ -381,9 +380,17 @@ export default async function createNewPayment(
     }
     return (await response.json()) as CreateNewPaymentResponse200;
   } catch (error) {
-    if (error instanceof AsaasSdkError) {
-      throw error;
+    if (error instanceof AsaasSdkError) throw error;
+
+    if ((error as any).cause.code == "ENOTFOUND") {
+      throw new AsaasSdkError({
+        name: "NETWORK_ERROR",
+        message: "Failed to create a new payment.",
+        cause:
+          "getaddrinfo ENOTFOUND. Check your internet connection and try again.",
+      });
     }
+
     throw new AsaasSdkError({
       name: "NETWORK_ERROR",
       message: "Failed to create a new payment.",
