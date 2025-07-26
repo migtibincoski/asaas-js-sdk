@@ -123,7 +123,7 @@ export type SplitObject = {
   /** Percentage of the net value of the charge to be transferred when received. */
   percentualValue?: number;
 
-  /** (Instalments only). Amount that will be split relative to the total amount that will be paid in installments.. */
+  /** (Instalments only). Amount that will be split relative to the total amount that will be paid in installments. */
   totalFixedValue?: number;
 
   /** Split identifier in your system. */
@@ -431,7 +431,7 @@ export type CreateNewPaymentBody = {
   /** Payment amount. */
   value: number;
 
-  /** Payment due date. */
+  /** Payment due date (format: YYYY-MM-DD). */
   dueDate: string;
 
   /** Payment description (max. 500 characters). */
@@ -446,10 +446,10 @@ export type CreateNewPaymentBody = {
   /** Number of installments (only in the case of installment payment). */
   installmentCount?: number;
 
-  /** Total amount of the charge that will be paid in installments. */
+  /** Enter the total amount of a charge that will be paid in installments (only in the case of an installment charge). If this field is sent, the installmentValue is not necessary, the calculation per installment will be automatic. */
   totalValue?: number;
 
-  /** Value of each installment (only in the case of installment payment). */
+  /** Value of each installment (only in the case of installment payment). Send this field if you want to define the value of each installment. */
   installmentValue?: number;
 
   /** Discount information. */
@@ -461,29 +461,14 @@ export type CreateNewPaymentBody = {
   /** Fine information for payment after due date. */
   fine?: FineObject;
 
-  /** Define whether the payment will be sent via post. */
+  /** Define whether the payment will be sent via post */
   postalService?: boolean;
 
-  /** Split settings. */
+  /** Split Settings. */
   split?: SplitObject[];
 
-  /** Automatic redirection information after the payment of the link payment. */
+  /** Automatic redirection information after the payment of the link payment */
   callback?: CallBackObject;
-
-  /** Credit card information. */
-  creditCard?: CreditCardObject;
-
-  /** Credit card holder information. */
-  creditCardHolderInfo?: CreditCardHolderInfoObject;
-
-  /** Credit card token for using the credit card tokenization functionality. */
-  creditCardToken?: string;
-
-  /** Carry out only the Pre-Authorization of the payment. */
-  authorizeOnly?: boolean;
-
-  /** IP from where the customer is making the purchase. Your server's IP must not be entered.. */
-  remoteIp: string;
 };
 
 export type ListPaymentsBody = {
