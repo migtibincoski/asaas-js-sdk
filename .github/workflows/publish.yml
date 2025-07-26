@@ -29,9 +29,13 @@ jobs:
 
       - name: Minify files
         run: |
-          yarn global add esbuild
+          yarn global add terser
           for file in $(find build -name '*.js' -type f); do
-            esbuild "$file" --minify --minify-syntax --minify-whitespace --outfile="$file" --allow-overwrite
+            terser "$file" \
+              --compress \
+              --mangle \
+              --comments "/^\\**!|^\\**@preserve|^\\**@license|^\\**@cc_on|^\\*\\*/" \
+              --output "$file"
           done
 
       - name: Publish to NPM
