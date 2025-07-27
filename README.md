@@ -1,4 +1,11 @@
-# asaas-node-sdk
+# asaas-js-sdk
+
+[![NPM Package Version](https://img.shields.io/npm/v/asaas-js-sdk?style=flat&logo=npm&logoSize=5px&label=version&color=red&cacheSeconds=0)](https://npmjs.com/package/asaas-js-sdk)
+[![NPM Package Downloads](https://img.shields.io/npm/dm/asaas-js-sdk.svg)](https://npmjs.com/package/asaas-js-sdk)
+[![Discord Server](https://img.shields.io/discord/920987652025630730?style=flat&logo=discord&logoColor=white&labelColor=%235865F2&link=https%3A%2F%2Fdiscord.gg%2FNZCGTZ6nnN)](https://discord.gg/NZCGTZ6nnN)
+[![Github Issues](https://img.shields.io/github/issues/migtibincoski/asaas-js-sdk)](https://github.com/migtibincoski/asaas-js-sdk/issues)
+[![Github Pull Requests](https://img.shields.io/github/issues-pr/migtibincoski/asaas-js-sdk)](https://github.com/migtibincoski/asaas-js-sdk/pulls)
+[![NPM Bundle Size](https://img.shields.io/bundlephobia/min/asaas-js-sdk)](https://npmjs.com/package/asaas-js-sdk)
 
 A modern and developer-friendly Node.js SDK for the [Asaas API](https://docs.asaas.com/), designed to simplify and streamline integration with the Asaas platform. Whether you're working with payments, subscriptions, or customer management, this SDK has you covered with clean, intuitive methods and TypeScript support.
 
@@ -13,18 +20,23 @@ A modern and developer-friendly Node.js SDK for the [Asaas API](https://docs.asa
 
 ## 📦 Installation
 
-This package is not yet available for use.
+It's so simple! Just use: 
+```bash
+npm install asaas-js-sdk
+# or
+yarn add asaas-js-sdk
+```
 
 ## 📚 Documentation
 
-For a full list of methods and features, visit the [official Asaas API Reference](https://docs.asaas.com/) or explore our detailed SDK docs available [here](https://github.com/migtibincoski/asaas-node-sdk/wiki).
+For a full list of methods and features, visit the [official Asaas API Reference](https://docs.asaas.com/) or explore our detailed SDK docs available [here](https://github.com/migtibincoski/asaas-js-sdk/wiki).
 
 ### Available Modules
 
 - ⚠️ Payments
   - ✅ [Create new payment](https://docs.asaas.com/reference/create-new-payment)
-  - ⚠️ [List charges](https://docs.asaas.com/reference/list-payments)
-  - ❌ [Create new payment with credit card](https://docs.asaas.com/reference/create-new-payment-with-credit-card)
+  - ✅ [List payments](https://docs.asaas.com/reference/list-payments)
+  - ⚠️ [Create new payment with credit card](https://docs.asaas.com/reference/create-new-payment-with-credit-card)
   - ❌ [Capture payment with pre-authorization](https://docs.asaas.com/reference/capture-payment-with-pre-authorization)
   - ❌ [Pay a charge with a credit card](https://docs.asaas.com/reference/pay-a-charge-with-credit-card)
   - ❌ [Retrieve payment billing information](https://docs.asaas.com/reference/retrieve-payment-billing-information)
@@ -94,6 +106,10 @@ yarn test
 ## 🤝 Contributing
 
 We welcome contributions! If you'd like to report bugs, request features or submit pull requests, feel free to open an issue or fork the repo.
+
+|          |Name      |Username  |
+|----------|----------|----------|
+|![migtibincoski's Profile Picture](https://github.com/migtibincoski.png?size=50)|Miguel Tibincoski|[migtibincoski](https://github.com/migtibincoski)
 
 ## 📄 License
 

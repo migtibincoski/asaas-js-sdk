@@ -2,3 +2,5 @@
 *.log
 *.lock
 package-lock.json
+apikey.lock
+/src/try.ts
