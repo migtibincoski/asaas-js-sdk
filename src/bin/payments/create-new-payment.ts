@@ -115,9 +115,10 @@ export default async function createNewPayment(
       cause: `The "description" parameter needs to be "string". You provided "${typeof body.description}".`,
     });
   } else if (body.description && body.description?.length > 500) {
-    console.warn(
-      "[ASAAS_SDK] [CREATE_NEW_PAYMENT] The description you provided has more than 500 characters. Any characters more will be deleted."
-    );
+    data.debug &&
+      console.warn(
+        "[ASAAS_SDK] [CREATE_NEW_PAYMENT] The description you provided has more than 500 characters. Any characters more will be deleted."
+      );
     body.description = body.description.slice(0, 500);
   }
 
@@ -379,9 +380,17 @@ export default async function createNewPayment(
     }
     return (await response.json()) as CreateNewPaymentResponse200;
   } catch (error) {
-    if (error instanceof AsaasSdkError) {
-      throw error;
+    if (error instanceof AsaasSdkError) throw error;
+
+    if ((error as any).cause.code == "ENOTFOUND") {
+      throw new AsaasSdkError({
+        name: "NETWORK_ERROR",
+        message: "Failed to create a new payment.",
+        cause:
+          "getaddrinfo ENOTFOUND. Check your internet connection and try again.",
+      });
     }
+
     throw new AsaasSdkError({
       name: "NETWORK_ERROR",
       message: "Failed to create a new payment.",

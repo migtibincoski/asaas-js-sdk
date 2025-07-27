@@ -1,14 +1,16 @@
 {
   "name": "asaas-js-sdk",
   "description": "A Node.js SDK compatible with TypeScript and JavaScript for integrating Assas with your project.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "repository": "https://github.com/migtibincoski/asaas-js-sdk.git",
+  "homepage": "https://github.com/migtibincoski/asaas-js-sdk/wiki",
   "author": "Miguel Tibincoski <tibincoskimiguel@gmail.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
     "build": "tsup",
-    "test": "jest"
+    "test": "jest",
+    "try": "ts-node --project tsconfig.json src/try.ts"
   },
   "main": "./build/index.js",
   "module": "./build/index.mjs",

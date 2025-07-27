@@ -1,11 +1,16 @@
-import Payments from "./sdk/payments";
-import type { CreateNewPaymentBody } from "./sdk/payments/types";
+import Payments from "./bin/payments";
+import listPayments from "./bin/payments/list-payments";
+import type {
+  CreateNewPaymentBody,
+  ListPaymentsBody,
+} from "./bin/payments/types";
 import AsaasSdkError from "./utils/error";
+import console from "./utils/console";
 import formatCPF from "./utils/format-cpf";
 import validateCPF from "./utils/validate-cpf";
 
 export type AsaasSdkConstructorConfig = {
-  baseURL?: string;
+  baseURL: string;
   apiKey: string;
   version?: string;
   debug?: boolean;
@@ -13,7 +18,7 @@ export type AsaasSdkConstructorConfig = {
 
 class AsaasSDK {
   baseURL: string = "https://api-sandbox.asaas.com";
-  apiKey: string = "";
+  apiKey: string;
   version: string = "v3";
   debug: boolean = false;
 
@@ -22,77 +27,90 @@ class AsaasSDK {
       throw new AsaasSdkError({
         name: "INITIALIZATION_ERROR",
         message: "Failed to initialize Asaas SDK",
-        cause: "No data provided",
+        cause: "No data provided.",
       });
 
     if (typeof data !== "object")
       throw new AsaasSdkError({
         name: "INITIALIZATION_ERROR",
         message: "Failed to initialize Asaas SDK",
-        cause: `Invalid data type. Expected object, got ${typeof data}`,
+        cause: `Invalid data type. Expected "object", got "${typeof data}".`,
       });
+
+    if ("debug" in data && data.debug && typeof data.debug !== "boolean") {
+      console.warn(
+        "\x1b[33mDebug option should be a boolean. Defaulting to false...\x1b[0m"
+      );
+      data.debug = false;
+    }
 
     const oldWarn = console.warn;
-    console.warn = (...args: any[]) => this.debug && oldWarn(...args);
+    console.warn = (...args: any[]) =>
+      data.debug == true && oldWarn("\x1b[33m" + args.join(" ") + "\x1b[0m");
 
-    this.debug.toString().toLowerCase() == "true"
-      ? (this.debug = true)
-      : (this.debug = false);
+    if (data.baseURL) {
+      let url = null;
+      try {
+        url = new URL(data.baseURL);
+      } catch {
+        throw new AsaasSdkError({
+          name: "INITIALIZATION_ERROR",
+          message: "Failed to initialize Asaas SDK",
+          cause: `Invalid base URL. You provided: "${data.baseURL}".`,
+        });
+      }
 
-    if (!data.baseURL) {
+      if (url.protocol.slice(0, -1) !== "https") {
+        console.warn(
+          "Base URL is not using HTTPS. This may cause issues with the API. Automatically switching to HTTPS..."
+        );
+        url.protocol = "https:";
+        data.baseURL = url.origin;
+      }
+    } else {
       console.warn(
-        "\x1b[33mBase URL not provided. Defaulting to sandbox URL: https://api-sandbox.asaas.com\x1b[0m"
+        'Base URL not provided. Defaulting to sandbox URL: "https://api-sandbox.asaas.com"...'
       );
-      data.baseURL = "https://api-sandbox.asaas.com";
-    }
-
-    let url = null;
-    try {
-      url = new URL(data.baseURL);
-    } catch {
-      throw new AsaasSdkError({
-        name: "INITIALIZATION_ERROR",
-        message: "Failed to initialize Asaas SDK",
-        cause: `Invalid base URL. You provided: ${data.baseURL}`,
-      });
-    }
-
-    if (url.protocol !== "https:") {
-      console.warn(
-        "\x1b[33mBase URL is not using HTTPS. This may cause issues with the API. Automatically switching to HTTPS...\x1b[0m"
-      );
-      url.protocol = "https:";
-      data.baseURL = url.toString();
+      data.baseURL = this.baseURL;
+      if (data.baseURL.endsWith("/")) data.baseURL = data.baseURL.slice(0, -1);
     }
 
     if (!data.version) {
-      console.warn(
-        "\x1b[33mVersion not provided. Defaulting to v3. Please specify the version in the future.\x1b[0m"
-      );
-      this.version = "v3";
+      console.warn('Version not provided. Defaulting to "v3"...');
+      data.version = "v3";
     }
+
+    if (typeof data.version !== "string")
+      throw new AsaasSdkError({
+        name: "INITIALIZATION_ERROR",
+        message: "Failed to initialize Asaas SDK",
+        cause: `Invalid version type. Expected "string", got "${typeof data.version}".`,
+      });
 
     if (!data.apiKey)
       throw new AsaasSdkError({
         name: "INITIALIZATION_ERROR",
         message: "Failed to initialize Asaas SDK",
-        cause: "Missing API key",
+        cause: "Missing API key.",
       });
 
     if (typeof data.apiKey !== "string")
       throw new AsaasSdkError({
         name: "INITIALIZATION_ERROR",
         message: "Failed to initialize Asaas SDK",
-        cause: `Invalid API key type. Expected string, got ${typeof data.apiKey}`,
+        cause: `Invalid API key type. Expected "string", got "${typeof data.apiKey}".`,
       });
 
-    this.baseURL = data.baseURL;
     this.apiKey = data.apiKey;
+    this.baseURL = data.baseURL || this.baseURL;
+    this.version = data.version || this.version;
+    this.debug = data.debug || this.debug;
   }
 
   payments = {
-    createNewPayment: (request: CreateNewPaymentBody) =>
-      Payments.createNewPayment(this, request),
+    createNewPayment: (data: CreateNewPaymentBody) =>
+      Payments.createNewPayment(this, data),
+    listPayments: (data?: ListPaymentsBody) => listPayments(this, data),
   };
 }
 

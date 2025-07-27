@@ -4,6 +4,9 @@ type ErrorName =
   | "NETWORK_ERROR"
   | "MISSING_PARAMETERS"
   | "INVALID_PARAMETERS"
+  | "INVALID_JSON_RESPONSE"
+  | "UNEXPECTED_ERROR_FORMAT"
+  | "UNAUTHORIZED"
   | "ERROR";
 
 export default class AsaasSdkError extends Error {
