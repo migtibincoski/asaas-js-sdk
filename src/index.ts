@@ -10,10 +10,30 @@ import formatCPF from "./utils/format-cpf";
 import validateCPF from "./utils/validate-cpf";
 
 export type AsaasSdkConstructorConfig = {
-  baseURL: string;
+  /** Base URL for the Asaas API
+   * @default "https://api-sandbox.asaas.com" */
+  baseURL?: string;
+
+  /** API key for authentication */
   apiKey: string;
+
+  /** API version (optional)
+   * @default
+   * "v3"
+   */
   version?: string;
+
+  /** Enable debug mode (optional)
+   * @default
+   * false
+   */
   debug?: boolean;
+
+  /** Custom user agent string. Read more about user agents at {@link https://docs.asaas.com/docs/authentication-2|Asaas Docs}.
+   * @default
+   * "AsaasSDK (Node.js)"
+   */
+  userAgent?: string;
 };
 
 class AsaasSDK {
@@ -21,6 +41,7 @@ class AsaasSDK {
   apiKey: string;
   version: string = "v3";
   debug: boolean = false;
+  userAgent: string = `AsaasSDK (Node.js)`;
 
   constructor(data: AsaasSdkConstructorConfig) {
     if (!data)
@@ -37,7 +58,7 @@ class AsaasSDK {
         cause: `Invalid data type. Expected "object", got "${typeof data}".`,
       });
 
-    if ("debug" in data && data.debug && typeof data.debug !== "boolean") {
+    if ("debug" in data && typeof data.debug !== "boolean") {
       console.warn(
         "\x1b[33mDebug option should be a boolean. Defaulting to false...\x1b[0m"
       );
@@ -75,7 +96,7 @@ class AsaasSDK {
       if (data.baseURL.endsWith("/")) data.baseURL = data.baseURL.slice(0, -1);
     }
 
-    if (!data.version) {
+    if (!("version" in data)) {
       console.warn('Version not provided. Defaulting to "v3"...');
       data.version = "v3";
     }
@@ -87,7 +108,7 @@ class AsaasSDK {
         cause: `Invalid version type. Expected "string", got "${typeof data.version}".`,
       });
 
-    if (!data.apiKey)
+    if (!("apiKey" in data))
       throw new AsaasSdkError({
         name: "INITIALIZATION_ERROR",
         message: "Failed to initialize Asaas SDK",
@@ -101,10 +122,18 @@ class AsaasSDK {
         cause: `Invalid API key type. Expected "string", got "${typeof data.apiKey}".`,
       });
 
+    if ("userAgent" in data && typeof data.userAgent !== "string")
+      throw new AsaasSdkError({
+        name: "INITIALIZATION_ERROR",
+        message: "Failed to initialize Asaas SDK",
+        cause: `Invalid userAgent type. Expected "string", got "${typeof data.userAgent}".`,
+      });
+
     this.apiKey = data.apiKey;
     this.baseURL = data.baseURL || this.baseURL;
     this.version = data.version || this.version;
     this.debug = data.debug || this.debug;
+    this.userAgent = data.userAgent || this.userAgent;
   }
 
   payments = {

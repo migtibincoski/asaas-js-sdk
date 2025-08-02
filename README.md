@@ -85,16 +85,6 @@ For a full list of methods and features, visit the [official Asaas API Reference
 - ❌ Account Document
 - ❌ Chargeback
 
-## 🧪 Testing
-
-All methods are covered with unit and integration tests. To run tests locally:
-
-```bash
-npm run test
-# or
-yarn test
-```
-
 ## 🛠️ Built With
 
 - Node.js

@@ -451,16 +451,18 @@ export default function listPayments(
     if (body.dueDateLe) url.searchParams.append("dueDateLe", body.dueDateLe);
     if (body.user) url.searchParams.append("user", body.user);
 
-    if (url.href.endsWith("?")) url.href = url.href.slice(0, -1);
-    if (url.href.endsWith("&")) url.href = url.href.slice(0, -1);
-    if (url.href.endsWith("/")) url.href = url.href.slice(0, -1);
-
-    if (data.debug) console.info("Fetching:", url.href);
+    if (
+      url.href.endsWith("?") ||
+      url.href.endsWith("&") ||
+      url.href.endsWith("/")
+    )
+      url.href = url.href.slice(0, -1);
 
     fetch(url.href, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent": data.userAgent,
         access_token: data.apiKey,
       },
     })
@@ -517,13 +519,7 @@ export default function listPayments(
           }
         }
       })
-      .catch((networkError) => {
-        networkError = networkError.cause.toString();
-        let cause = null;
-
-        if (networkError.startsWith("Error: "))
-          cause = networkError.replace("Error: ", "").split("\n")[0];
-
+      .catch((cause) => {
         reject(
           new AsaasSdkError({
             name: "NETWORK_ERROR",
